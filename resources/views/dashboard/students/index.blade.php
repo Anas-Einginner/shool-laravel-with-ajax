@@ -261,9 +261,9 @@
                             اضافة عبر الاكسل
                         </button>
 
-                        <a href="{{ route('dash.student.export') }}" class="btn btn-primary col-12 mb-2">
+                        <button href="{{ route('dash.student.export') }}" class="btn btn-primary col-12 mb-2" id="exportBtn">
                             تصدير اكسل
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -323,7 +323,7 @@
 
 
 
-                        */
+                                */
         var table = $('#datatable').DataTable({
             processing: true,
             serverSide: true,
@@ -471,12 +471,35 @@
                     table.draw();
                 },
                 error: function(e) {
-                    
-                        toastr.error('حدث خطأ أثناء رفع الملف.');
-                    
+
+                    toastr.error('حدث خطأ أثناء رفع الملف.');
+
                 }
             });
         });
+
+
+        $('#exportBtn').on('click', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '{{ route('dash.student.export') }}',
+                method: 'GET',
+                success: function(response) {
+                    toastr.success(response.success);
+                    table.draw();
+                    // window.location.href = response.file_url;
+                    $('<iframe>', {
+                src: response.file_url,
+                style: 'display:none;'
+            }).appendTo('body');
+                },
+                error: function() {
+                    toastr.error('حدث خطأ أثناء تصدير الملف.');
+                }
+            });
+        });
+
+
         /*    $(document).ready(function() {
                 $(document).on('click', '.', function(e) {
                     e.preventDefault();

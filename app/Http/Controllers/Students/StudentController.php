@@ -22,7 +22,7 @@ class StudentController extends Controller
 {
     function index()
     {
-        $grades = Grade::all()->where('status','active');
+        $grades = Grade::all()->where('status', 'active');
         $sections = Section::all()->where('status', 'active');
         return view('dashboard.students.index', compact('grades', 'sections'));
     }
@@ -133,44 +133,48 @@ class StudentController extends Controller
         ]);
     }
 
-    function export()
-    {
-        $dir = public_path('exports');
+   public function export()
+{
+    $dir = public_path('exports');
 
-        if (!File::exists('exports')) {
-            File::makeDirectory($dir, 0755, true);
-        }
-
-        $path = public_path('exports\students_export_' . time() . '.csv');
-
-
-        $students = Student::query()->with(['grade', 'user', 'section'])->get();
-
-        SimpleExcelWriter::create($path)->addHeader([
-            'First Name',
-            'Last Name',
-            'Parent Name',
-            'Parent Phone',
-            'Gender',
-            'Email',
-            'Date Of Birth',
-            'Grade',
-            'Section',
-        ])->addRows($students->map(function ($student) {
-            return [
-                $student->first_name,
-                $student->last_name,
-                $student->parent_name,
-                $student->parent_phone,
-                $student->gender,
-                $student->user->email,
-                $student->date_of_birth,
-                $student->grade->name,
-                $student->section->name,
-            ];
-        }));
-        return response()->download($path)->deleteFileAfterSend(true);
+    if (!File::exists($dir)) {
+        File::makeDirectory($dir, 0755, true);
     }
+
+    $filename = 'students_export_' . time() . '.csv';
+    $path = public_path('exports/' . $filename);
+
+    $students = Student::query()->with(['grade', 'user', 'section'])->get();
+
+    SimpleExcelWriter::create($path)->addHeader([
+        'First Name',
+        'Last Name',
+        'Parent Name',
+        'Parent Phone',
+        'Gender',
+        'Email',
+        'Date Of Birth',
+        'Grade',
+        'Section',
+    ])->addRows($students->map(function ($student) {
+        return [
+            $student->first_name,
+            $student->last_name,
+            $student->parent_name,
+            $student->parent_phone,
+            $student->gender,
+            $student->user->email,
+            $student->date_of_birth,
+            $student->grade->name,
+            $student->section->name,
+        ];
+    }));
+
+    return response()->json([
+        'success' => 'تمت العملية بنجاح',
+        'file_url' => route('dash.student.download', $filename)
+    ]);
+}
 
 
 
@@ -234,9 +238,19 @@ class StudentController extends Controller
                 ]
             );
         });
-        
+
         return response()->json([
             'success' => 'تمت العملية بنجاح'
         ]);
     }
+  public function download($filename)
+{
+    $path = public_path('exports/' . $filename);
+
+    if (!File::exists($path)) {
+        abort(404);
+    }
+
+    return response()->download($path)->deleteFileAfterSend(true);
+}
 }
