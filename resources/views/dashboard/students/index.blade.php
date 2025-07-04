@@ -500,36 +500,7 @@
         });
 
 
-        /*    $(document).ready(function() {
-                $(document).on('click', '.', function(e) {
-                    e.preventDefault();
-                    var button = $(this);
 
-
-
-                    /* var name = button.data('name');
-                     var email = button.data('email');
-                     var phone = button.data('phone');
-                     var qual = button.data('qual');
-                     var spec = button.data('spec');
-                     var gender = button.data('gender');
-                     var status = button.data('status');
-                     var date_of_birth = button.data('date-of-birth');
-                     var hire_date = button.data('hire-date');
-                     var id = button.data('id');
-
-                     $('#name').val(name);
-                     $('#email').val(email);
-                     $('#phone').val(phone);
-                     $('#gender').val(gender);
-                     $('#qual').val(qual);
-                     $('#spec').val(spec);
-                     $('#status').val(status);
-                     $('#date_of_birth').val(date_of_birth);
-                     $('#hire_date').val(hire_date);
-                     $('#id').val(id);
-                });
-            });*/
 
         $(document).ready(function() {
             $(document).on('click', '.active-btn', function(e) {
