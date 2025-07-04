@@ -14,8 +14,8 @@ class SubjectController extends Controller
 {
     function index()
     {
-        $teachers = Teacher::all();
-        $grades = Grade::all();
+        $teachers = Teacher::all()->where('status','active');
+        $grades = Grade::all()->where('status','active');
         return view('dashboard.subjects.index', compact('teachers', 'grades'));
     }
 

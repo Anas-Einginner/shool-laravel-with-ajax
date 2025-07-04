@@ -22,8 +22,8 @@ class StudentController extends Controller
 {
     function index()
     {
-        $grades = Grade::all();
-        $sections = Section::all();
+        $grades = Grade::all()->where('status','active');
+        $sections = Section::all()->where('status', 'active');
         return view('dashboard.students.index', compact('grades', 'sections'));
     }
 
